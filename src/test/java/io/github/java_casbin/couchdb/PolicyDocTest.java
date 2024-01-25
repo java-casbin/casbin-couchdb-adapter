@@ -1,4 +1,4 @@
-package com.zikeyang.casbin.couchdb;
+package io.github.java_casbin.couchdb;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

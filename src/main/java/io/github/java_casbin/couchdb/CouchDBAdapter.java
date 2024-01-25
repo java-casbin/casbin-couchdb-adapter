@@ -1,21 +1,17 @@
-package com.zikeyang.casbin.couchdb;
+package io.github.java_casbin.couchdb;
 
-import static org.casbin.jcasbin.util.Util.splitCommaDelimited;
-import com.zikeyang.casbin.couchdb.filter.Filter;
+import io.github.java_casbin.couchdb.filter.Filter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.casbin.jcasbin.exception.CasbinAdapterException;
-import org.casbin.jcasbin.model.Assertion;
 import org.casbin.jcasbin.model.Model;
 import org.casbin.jcasbin.persist.FilteredAdapter;
 import org.casbin.jcasbin.util.Util;
 import org.lightcouch.CouchDbClient;
-import org.lightcouch.Response;
 
 @Slf4j
 public class CouchDBAdapter implements FilteredAdapter {

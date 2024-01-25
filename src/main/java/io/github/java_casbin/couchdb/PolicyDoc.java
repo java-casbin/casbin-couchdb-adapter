@@ -1,8 +1,7 @@
-package com.zikeyang.casbin.couchdb;
+package io.github.java_casbin.couchdb;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

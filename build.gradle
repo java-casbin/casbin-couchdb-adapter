@@ -1,0 +1,94 @@
+plugins {
+    id "io.freefair.lombok" version "8.4"
+    id "java"
+    id "maven-publish"
+    id "signing"
+}
+
+
+group = "io.github.java-casbin"
+version = "1.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.17
+targetCompatibility = 1.17
+
+dependencies {
+    implementation "org.casbin:jcasbin:1.43.0"
+    implementation "org.lightcouch:lightcouch:0.2.0"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.0"
+    implementation "org.slf4j:slf4j-api:1.7.32"
+
+    testImplementation platform("org.junit:junit-bom:5.9.1")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testImplementation "com.fasterxml.jackson.core:jackson-databind:2.13.0"
+    testImplementation "ch.qos.logback:logback-classic:1.2.6"
+    testImplementation "org.mockito:mockito-core:4.0.0"
+
+    implementation "org.projectlombok:lombok:1.18.24"
+    annotationProcessor "org.projectlombok:lombok:1.18.24"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.register('javadocJar', Jar) {
+    archiveClassifier.set('javadoc')
+    from javadoc
+}
+
+tasks.register('sourcesJar', Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+task genPom(type: Copy) {
+    dependsOn 'generatePomFileForMavenJavaPublication'
+    from "${buildDir}/publications/mavenJava"
+    into "${buildDir}/libs"
+    include "*.xml"
+    rename { String fileName ->
+        if (fileName == 'pom-default.xml') {
+            "${project.name}-${project.version}.pom"
+        } else {
+            fileName
+        }
+    }
+}
+
+
+task generateChecksums() {
+    dependsOn genPom
+    doLast {
+        def filesToCheck = configurations.archives.allArtifacts.files
+        // Add the pom-default.xml file to the list of files to check
+        filesToCheck += file("${buildDir}/libs/${project.name}-${project.version}.pom")
+        filesToCheck.each { file ->
+            ['md5', 'sha1'].each { algorithm ->
+                ant.checksum(file: file, algorithm: algorithm)
+            }
+        }
+    }
+}
+
+task bundle(dependsOn: ['build', 'genPom', 'generateChecksums']) {
+    doLast {
+        println 'Bundle task completed.'
+    }
+}

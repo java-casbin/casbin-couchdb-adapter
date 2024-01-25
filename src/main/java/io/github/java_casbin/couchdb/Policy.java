@@ -1,4 +1,4 @@
-package com.zikeyang.casbin.couchdb;
+package io.github.java_casbin.couchdb;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
