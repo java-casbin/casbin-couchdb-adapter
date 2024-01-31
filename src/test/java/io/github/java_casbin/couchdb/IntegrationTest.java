@@ -2,9 +2,6 @@ package io.github.java_casbin.couchdb;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import lombok.extern.slf4j.Slf4j;
 import org.casbin.jcasbin.main.Enforcer;
@@ -37,7 +34,7 @@ public class IntegrationTest {
                 .setDbName("test_db")
                 .setCreateDbIfNotExist(true)
                 .setUsername("admin")
-                .setPassword("password")
+                .setPassword("admin")
                 .setProtocol("http")
                 .setHost("localhost")
                 .setPort(5984)
@@ -146,6 +143,51 @@ public class IntegrationTest {
         assertTrue(enforcer2.enforce("alice", "domain1", "data1", "read"));
         enforcer2.addPermissionForUser("admin", "domain1", "newdata", "read");
         assertTrue(enforcer1.enforce("alice", "domain1", "newdata", "read"));
+    }
+
+    @Test
+    public void testDeleteData() {
+        PolicyDoc policyDoc = new PolicyDoc(policy);
+        Response res = couchDbClient.save(policyDoc);
+
+        Enforcer enforcer = new Enforcer(model, new CouchDBAdapter(couchDbClient, res.getId()));
+
+        enforcer.removeFilteredPolicy(2, "data1");
+
+        assertFalse(enforcer.enforce("alice", "domain1", "data1", "read"));
+        assertFalse(enforcer.enforce("alice", "domain1", "data1", "write"));
+    }
+
+    @Test
+    public void testRevokePermission() {
+        PolicyDoc policyDoc = new PolicyDoc(policy);
+        Response res = couchDbClient.save(policyDoc);
+
+        Enforcer enforcer = new Enforcer(model, new CouchDBAdapter(couchDbClient, res.getId()));
+
+        enforcer.addPermissionForUser("alice", "default", "data1", "read");
+        assertTrue(enforcer.enforce("alice", "default", "data1", "read"));
+        enforcer.removeFilteredPolicy(0, "alice", "default", "data1");
+        assertFalse(enforcer.enforce("alice", "default", "data1", "read"));
+        assertTrue(
+                enforcer.enforce("alice", "domain1", "data1", "read")); // Test that other permissions are not affected
+    }
+
+    @Test
+    public void testSearchPermission() {
+        PolicyDoc policyDoc = new PolicyDoc();
+        Response res = couchDbClient.save(policyDoc);
+
+        Enforcer enforcer = new Enforcer(model, new CouchDBAdapter(couchDbClient, res.getId()));
+
+        enforcer.addPermissionForUser("alice", "default", "data1", "write");
+        enforcer.addPermissionForUser("bob", "default", "data2", "write");
+        enforcer.addPermissionForUser("bob", "default", "data2", "read");
+
+        var list = enforcer.getFilteredPolicy(0, "alice", "default", "data1");
+
+        assertEquals("[[alice, default, data1, write]]", list.toString());
+        assertEquals("[[bob, default, data2, read]]", enforcer.getFilteredPolicy(0, "", "", "", "read").toString());
     }
 }
 

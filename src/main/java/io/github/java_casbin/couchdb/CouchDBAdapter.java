@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.casbin.jcasbin.exception.CasbinAdapterException;
 import org.casbin.jcasbin.model.Model;
 import org.casbin.jcasbin.persist.FilteredAdapter;
 import org.casbin.jcasbin.util.Util;
 import org.lightcouch.CouchDbClient;
+import org.lightcouch.Response;
 
 @Slf4j
 public class CouchDBAdapter implements FilteredAdapter {
@@ -29,9 +29,13 @@ public class CouchDBAdapter implements FilteredAdapter {
     private PolicyDoc getPolicyDoc() throws CasbinAdapterException {
 
         if (!couchDbClient.contains(policyID)) {
-            throw new CasbinAdapterException("Policy document does not exist.");
+            PolicyDoc policyDoc = new PolicyDoc();
+            policyDoc.setId(policyID);
+            Response response = couchDbClient.save(policyDoc);
+            if (response.getError() != null) {
+                throw new CasbinAdapterException("Create policy document failed: " + response.getError());
+            }
         }
-        log.info("Get policy doc from {}", policyID);
 
         return couchDbClient.find(PolicyDoc.class, policyID);
     }
@@ -72,7 +76,7 @@ public class CouchDBAdapter implements FilteredAdapter {
         List<String> policy = new ArrayList<>();
         model.model.get(ptype).forEach((k, v) -> {
             List<String> p =
-                    v.policy.parallelStream().map(x -> k + ", " + Util.arrayToString(x)).collect(Collectors.toList());
+                    v.policy.parallelStream().map(x -> k + ", " + Util.arrayToString(x)).toList();
             policy.addAll(p);
         });
         return policy;
