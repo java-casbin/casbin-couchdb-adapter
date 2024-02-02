@@ -1,3 +1,16 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 plugins {
     id "io.freefair.lombok" version "8.4"
     id "java"
@@ -7,7 +20,7 @@ plugins {
 
 
 group = "io.github.java-casbin"
-version = "1.0.0-SNAPSHOT"
+version = "0.1.0"
 
 repositories {
     mavenCentral()
@@ -41,6 +54,12 @@ test {
     }
 }
 
+task printVersion {
+    doLast {
+        println version
+    }
+}
+
 tasks.register('javadocJar', Jar) {
     archiveClassifier.set('javadoc')
     from javadoc
@@ -59,6 +78,33 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+
+            pom {
+                name = 'Casbin couchdb adapter'
+                description = 'A couchdb adapter for Casbin'
+                url = 'https://github.com/java-casbin/casbin-couchdb-adapter'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'zike'
+                        name = 'Zike Yang'
+                        email = 'zike@apache.org'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/java-casbin/casbin-couchdb-adapter.git'
+                    developerConnection = 'scm:git:ssh://github.com:java-casbin/casbin-couchdb-adapte.git'
+                    url = 'http://github.com/java-casbin/casbin-couchdb-adapter/tree/main'
+                }
+            }
         }
     }
 }
