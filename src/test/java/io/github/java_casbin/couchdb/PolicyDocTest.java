@@ -101,12 +101,12 @@ public class PolicyDocTest {
         assertEquals(6, policyDoc.getPolicies().size());
 
         // Assert the properties of each policy
-        assertPolicy(policyDoc.getPolicies().get(0), "p", "admin", Arrays.asList("domain1", "data1", "read"));
-        assertPolicy(policyDoc.getPolicies().get(1), "p", "admin", Arrays.asList("domain1", "data1", "write"));
-        assertPolicy(policyDoc.getPolicies().get(2), "p", "admin", Arrays.asList("domain2", "data2", "read"));
-        assertPolicy(policyDoc.getPolicies().get(3), "p", "admin", Arrays.asList("domain2", "data2", "write"));
-        assertPolicy(policyDoc.getPolicies().get(4), "g", "alice", Arrays.asList("admin", "domain1"));
-        assertPolicy(policyDoc.getPolicies().get(5), "g", "bob", Arrays.asList("admin", "domain2"));
+        assertPolicy(policyDoc.getPolicies().get(0), "p", "p", Arrays.asList("admin","domain1", "data1", "read"));
+        assertPolicy(policyDoc.getPolicies().get(1), "p", "p", Arrays.asList("admin","domain1", "data1", "write"));
+        assertPolicy(policyDoc.getPolicies().get(2), "p", "p", Arrays.asList("admin","domain2", "data2", "read"));
+        assertPolicy(policyDoc.getPolicies().get(3), "p", "p", Arrays.asList("admin","domain2", "data2", "write"));
+        assertPolicy(policyDoc.getPolicies().get(4), "g", "g", Arrays.asList("alice", "admin", "domain1"));
+        assertPolicy(policyDoc.getPolicies().get(5), "g", "g", Arrays.asList("bob", "admin", "domain2"));
     }
 
     private void assertPolicy(Policy policy, String expectedSec, String expectedPtype, List<String> expectedRule) {
