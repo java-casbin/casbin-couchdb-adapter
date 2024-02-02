@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -x -e
+set -xe
 
 cd "$(git rev-parse --show-toplevel)"
 

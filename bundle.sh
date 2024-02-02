@@ -12,6 +12,8 @@
 
 set -xe
 
+cd "$(git rev-parse --show-toplevel)"
+
 VERSION=$(./gradlew -q printVersion)
 BUNDLE_DIR="build/bundle/io/github/java-casbin/casbin-couchdb-adapter/$VERSION"
 
