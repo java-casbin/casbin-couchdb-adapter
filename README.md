@@ -12,9 +12,9 @@
   limitations under the License.
 -->
 
-# Casbin Couchdb Adapter
+# Casbin CouchDB Adapter
 
-`casbin-couchdb-adapter` is an adapter for [jCasbin](https://github.com/casbin/jcasbin), a robust authorization library
+Casbin CouchDB Adapter is an adapter for [jCasbin](https://github.com/casbin/jcasbin), a robust authorization library
 that supports access control models like ACL, RBAC, ABAC in Java, using [CouchDB](https://couchdb.apache.org/) as a
 storage backend.
 
@@ -28,6 +28,7 @@ storage backend.
 ## Build
 
 Requirements:
+
 - JDK 17
 
 ```bash
@@ -47,9 +48,10 @@ dependencies {
 Or if you are using Maven, add the following dependency to your `pom.xml` file:
 
 ```xml
+
 <dependency>
-    <groupId>io.github.java-casbin</groupId>
-    <artifactId>casbin-couchdb-adapter</artifactId>
+  <groupId>io.github.java-casbin</groupId>
+  <artifactId>casbin-couchdb-adapter</artifactId>
 </dependency>
 ```
 
@@ -84,8 +86,8 @@ public class Main {
 
 ## Contributing
 
-Contributions to `casbin-couchdb-adapter` are welcome! Please read our [contributing guidelines](CONTRIBUTING.md) before
-getting started.
+Contributions to `casbin-couchdb-adapter` are welcome! Please feel free to open an issue or submit a pull request if you
+have any questions or suggestions.
 
 ## License
 
