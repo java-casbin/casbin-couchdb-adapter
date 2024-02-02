@@ -12,9 +12,10 @@ version = "1.0.0-SNAPSHOT"
 repositories {
     mavenCentral()
 }
-
-sourceCompatibility = 1.17
-targetCompatibility = 1.17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 dependencies {
     implementation "org.casbin:jcasbin:1.43.0"
@@ -34,6 +35,10 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    testLogging {
+        showStandardStreams true
+        exceptionFormat "full"
+    }
 }
 
 tasks.register('javadocJar', Jar) {
